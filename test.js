@@ -1,17 +1,20 @@
-import requests
+// server.js
 
-def test_xss(url, parameter):
-    payloads = [
-        "<script>alert('XSS')</script>",
-        "<img src=x onerror=alert(1)>",
-        # list of your payloads
-    ]
-    
-    for payload in payloads:
-        modified_url = f'{url}?{parameter}={payload}'
-        response = requests.get(modified_url)
-        if payload in response.text:
-            print(f'Potential XSS detected here - {modified_url}')
+const express = require('express');
+const path = require('path');
 
-# example
-test_xss("https://testwebsite.com/search", "query_param_name")
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static files from the "public" directory
+app.use(express.static('public'));
+
+// Route for the home page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
