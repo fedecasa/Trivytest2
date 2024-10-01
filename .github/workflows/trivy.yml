@@ -7,12 +7,9 @@ on:
   pull_request:
   workflow_call:
 permissions:
-  security-events: write
-  pull-requests: read
-  contents: write
-  statuses: write
   actions: read
-  pages: write
+  contents: read
+  security-events: write
 
 jobs:
   build:
