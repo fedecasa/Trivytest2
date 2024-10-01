@@ -30,6 +30,17 @@ jobs:
           #sarif_file: trivy.sarif
           severity: 'CRITICAL,HIGH'
         continue-on-error: true             # don't block the pipeline is security findings are spotted
+
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy.sarif'
+          #sarif_file: trivy.sarif
+          severity: 'CRITICAL,HIGH'
+        continue-on-error: true             # don't block the pipeline is security findings are spotted
          
      # # upload SARIF results to GitHub Code scanning even upon a non zero exit code from Trivy Scan,
      #  - name: Upload Trivy scan results to GitHub Security tab
