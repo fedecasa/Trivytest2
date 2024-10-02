@@ -22,35 +22,18 @@ jobs:
       - name: Run Trivy vulnerability scanner in IaC mode
         uses: aquasecurity/trivy-action@0.24.0
         with:
-          #scan-type: 'fs'
           scan-type: 'config'
           ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-iac.sarif'
-          #sarif_file: trivy.sarif
           severity: 'CRITICAL,HIGH'
         continue-on-error: true             # don't block the pipeline is security findings are spotted
-         
-     # # upload SARIF results to GitHub Code scanning even upon a non zero exit code from Trivy Scan,
-     #  - name: Upload Trivy scan results to GitHub Security tab
-     #    uses: github/codeql-action/upload-sarif@v3
-     #    if: always()
-     #    with:
-     #      sarif_file: 'trivy-results.sarif'
- 
-      # - name: Upload Trivy scan results to GitHub Security tab
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: 'trivy.sarif'
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
           # Path to SARIF file relative to the root of the repository
           sarif_file: trivy-iac.sarif
-
-      # - name: Upload SARIF file
-      #   uses: github/codeql-action/upload-sarif@v3
 
   filesystemscanning:
     if: ${{ always() }}
@@ -68,7 +51,6 @@ jobs:
           ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-fs.sarif'
-          #sarif_file: trivy.sarif
           severity: 'CRITICAL,HIGH'
         continue-on-error: true             # don't block the pipeline is security findings are spotted
 
