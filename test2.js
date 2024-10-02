@@ -1,8 +1,23 @@
-// Encoding misses single quote allowing XSS with payload (e.g. '+alert(1)+')
-<script>
-    <%
-        String searchTxt = StringEscapeUtils.escapeHtml4(request.getParameter("search"));
-    %>
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 
-    document.cookie = 'search=<%=searchTxt%>';
-</script>
+namespace WebFox.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class XSS : ControllerBase
+    {
+        public async void xss(string userInfo)
+        {
+            var context = this.ControllerContext.HttpContext;
+
+            await context.Response.WriteAsync("<body>"+ userInfo +"</body>");
+
+        }
+    }
+}
