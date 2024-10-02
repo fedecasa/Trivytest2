@@ -35,8 +35,6 @@ jobs:
           sarif_file: trivy-iac.sarif
 
   filesystemscanning:
-    if: ${{ always() }}                   # run even if iacscanning fails
-    needs: [iacscanning]                  # run even if iacscanning fails
     name: Trivy filestystem scanning
     runs-on: ubuntu-latest
     steps:
