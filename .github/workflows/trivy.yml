@@ -53,6 +53,8 @@ jobs:
       #   uses: github/codeql-action/upload-sarif@v3
 
   filesystemscanning:
+    if: ${{ always() }}
+    needs: [iacscanning]
     name: Trivy filestystem scanning
     runs-on: ubuntu-latest
     steps:
