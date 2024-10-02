@@ -1,4 +1,4 @@
-name: build
+name: trivy
 
 on:
   push:
@@ -12,32 +12,21 @@ permissions:
   security-events: write
 
 jobs:
-  build:
-    name: Build
+  iacscanning:
+    name: Trivy IaC scanning
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      # - name: Run Trivy vulnerability scanner in IaC mode
-      #   uses: aquasecurity/trivy-action@0.24.0
-      #   with:
-      #     #scan-type: 'fs'
-      #     scan-type: 'config'
-      #     ignore-unfixed: true
-      #     format: 'sarif'
-      #     output: 'trivy.sarif'
-      #     #sarif_file: trivy.sarif
-      #     severity: 'CRITICAL,HIGH'
-      #   continue-on-error: true             # don't block the pipeline is security findings are spotted
-
-      - name: Run Trivy vulnerability scanner in fs mode
+      - name: Run Trivy vulnerability scanner in IaC mode
         uses: aquasecurity/trivy-action@0.24.0
         with:
-          scan-type: 'fs'
+          #scan-type: 'fs'
+          scan-type: 'config'
           ignore-unfixed: true
           format: 'sarif'
-          output: 'trivy.sarif'
+          output: 'trivy-iac.sarif'
           #sarif_file: trivy.sarif
           severity: 'CRITICAL,HIGH'
         continue-on-error: true             # don't block the pipeline is security findings are spotted
@@ -58,10 +47,30 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           # Path to SARIF file relative to the root of the repository
-          sarif_file: trivy.sarif
+          sarif_file: trivy-iac.sarif
 
       # - name: Upload SARIF file
       #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     # Path to SARIF file relative to the root of the repository
-      #     sarif_file: trivy-fs.sarif
+
+  filesystemscanning:
+    name: Trivy filestystem scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-fs.sarif'
+          #sarif_file: trivy.sarif
+          severity: 'CRITICAL,HIGH'
+        continue-on-error: true             # don't block the pipeline is security findings are spotted
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-fs.sarif
